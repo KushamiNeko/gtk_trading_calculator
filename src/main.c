@@ -14,9 +14,9 @@
 
 #define INFO_PATTERN                                              \
   "\nCapital: $%.2f\nPosition: %.2f%%\nPrice: $%.2f\nShare: %d\n" \
-  "\nStop:\n3%%: %.2f\n5%%: "                                     \
-  "%.2f\n7%%: "                                                   \
-  "%.2f\n\n%s\n"
+  "\nStop:\n3%%: $%.2f\n5%%: "                                    \
+  "$%.2f\n7%%: "                                                  \
+  "$%.2f\n\n%s\n"
 
 #define INFO_QUOTE "Succeed!  No Matter What!  Whatever It Takes!"
 
@@ -100,10 +100,10 @@ static void activate() {
 
   gtk_widget_set_size_request(mainWindow, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-  gtk_window_set_gravity(GTK_WINDOW(mainWindow), GDK_GRAVITY_SOUTH_EAST);
-  gtk_window_move(GTK_WINDOW(mainWindow), 1920, 1080);
+  gtk_window_set_gravity(GTK_WINDOW(mainWindow), GDK_GRAVITY_SOUTH_WEST);
+  gtk_window_move(GTK_WINDOW(mainWindow), 0, 1080);
 
-  gtk_window_set_keep_above(GTK_WINDOW(mainWindow), TRUE);
+  /*gtk_window_set_keep_above(GTK_WINDOW(mainWindow), TRUE);*/
 
   GtkWidget* layoutBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, WIDGET_SPACING);
 
@@ -112,13 +112,13 @@ static void activate() {
   gtk_widget_set_margin_start(layoutBox, WIDGET_MARGIN);
   gtk_widget_set_margin_end(layoutBox, WIDGET_MARGIN);
 
-  GtkWidget* labelCapital = gtk_label_new("Capital:");
+  GtkWidget* labelCapital = gtk_label_new("Capital($):");
   gtk_widget_set_halign(labelCapital, GTK_ALIGN_START);
 
-  GtkWidget* labelPrice = gtk_label_new("Price:");
+  GtkWidget* labelPrice = gtk_label_new("Price($):");
   gtk_widget_set_halign(labelPrice, GTK_ALIGN_START);
 
-  GtkWidget* labelPosition = gtk_label_new("Position:");
+  GtkWidget* labelPosition = gtk_label_new("Position(%):");
   gtk_widget_set_halign(labelPosition, GTK_ALIGN_START);
 
   GtkWidget* entryCapital = gtk_entry_new();
