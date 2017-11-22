@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +22,22 @@
 #define INFO_QUOTE "Succeed!  No Matter What!  Whatever It Takes!"
 
 #define INFO_ERROR "I should study harder to solve to question!"
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static gboolean strIsDigit(const gchar* str) {
+  guint length = strlen(str);
+
+  for (unsigned int i = 0; i < length; i++) {
+    if (!isdigit(str[i])) {
+      if (str[i] != '.') {
+        return FALSE;
+      }
+    }
+  }
+
+  return TRUE;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,15 +64,13 @@ static void buttonClicked(GtkButton* button, void* data) {
   const gchar* charPosition =
       gtk_entry_get_text(GTK_ENTRY(userData->entryPosition));
 
-  if (strlen(charCapital) == 0) {
+  if (strlen(charCapital) == 0 || strlen(charPrice) == 0 ||
+      strlen(charPosition) == 0) {
     goto error;
   }
 
-  if (strlen(charPrice) == 0) {
-    goto error;
-  }
-
-  if (strlen(charPosition) == 0) {
+  if (!strIsDigit(charCapital) || !strIsDigit(charPrice) ||
+      !strIsDigit(charPosition)) {
     goto error;
   }
 
@@ -75,9 +90,7 @@ static void buttonClicked(GtkButton* button, void* data) {
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
-  g_free(info);
-
-  return;
+  goto cleanup;
 
 error:
 
@@ -86,9 +99,10 @@ error:
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
-  g_free(info);
+  goto cleanup;
 
-  return;
+cleanup:
+  g_free(info);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +117,7 @@ static void activate() {
   gtk_window_set_gravity(GTK_WINDOW(mainWindow), GDK_GRAVITY_SOUTH_WEST);
   gtk_window_move(GTK_WINDOW(mainWindow), 0, 1080);
 
-  /*gtk_window_set_keep_above(GTK_WINDOW(mainWindow), TRUE);*/
+  gtk_window_set_keep_above(GTK_WINDOW(mainWindow), TRUE);
 
   GtkWidget* layoutBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, WIDGET_SPACING);
 
