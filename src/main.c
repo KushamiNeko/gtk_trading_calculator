@@ -13,12 +13,12 @@
 #define WIDGET_SPACING 10
 #define WIDGET_MARGIN 10
 
-#define INFO_PATTERN                                                \
-  "\nCapital: $%.2f\nPosition: %.2f%%\nPrice: $%.2f\nShare: %d\n"   \
-  "\nStop:\n3%%: $%.2f\n5%%: "                                      \
-  "$%.2f\n7%%: "                                                    \
-  "$%.2f\n\nProfit:\n10%%: $%.2f\n15%%: $%.2f\n20%%: $%.2f\n25%%: " \
-  "$%.2f\n30%%: "                                                   \
+#define INFO_PATTERN                                                           \
+  "\nCapital: $%.2f\nPosition: %.2f%%\nPrice: $%.2f\nShare: %d\nTotal: %.2f\n" \
+  "\nStop:\n3%%: $%.2f\n5%%: "                                                 \
+  "$%.2f\n7%%: "                                                               \
+  "$%.2f\n\nProfit:\n10%%: $%.2f\n15%%: $%.2f\n20%%: $%.2f\n25%%: "            \
+  "$%.2f\n30%%: "                                                              \
   "$%.2f\n\n%s\n"
 
 #define INFO_QUOTE "Succeed!  No Matter What!  Whatever It Takes!"
@@ -83,6 +83,8 @@ static void buttonClicked(GtkButton* button, void* data) {
   float amount = capital * (position / 100.0);
   int share = amount / price;
 
+  float total = price * share;
+
   float three = price * (1.0 - 0.03);
   float five = price * (1.0 - 0.05);
   float seven = price * (1.0 - 0.07);
@@ -93,9 +95,9 @@ static void buttonClicked(GtkButton* button, void* data) {
   float twentyfive = price * (1.0 + 0.25);
   float thirty = price * (1.0 + 0.3);
 
-  info = g_strdup_printf(INFO_PATTERN, capital, position, price, share, three,
-                         five, seven, ten, fifteen, twenty, twentyfive, thirty,
-                         INFO_QUOTE);
+  info = g_strdup_printf(INFO_PATTERN, capital, position, price, share, total,
+                         three, five, seven, ten, fifteen, twenty, twentyfive,
+                         thirty, INFO_QUOTE);
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
@@ -104,7 +106,7 @@ static void buttonClicked(GtkButton* button, void* data) {
 error:
 
   info = g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0,
-                         0.0, 0.0, 0.0, 0.0, INFO_ERROR);
+                         0.0, 0.0, 0.0, 0.0, 0.0, INFO_ERROR);
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
@@ -151,7 +153,8 @@ static void activate() {
   GtkWidget* buttonCalculate = gtk_button_new_with_label("Calculate");
 
   gchar* info = g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0,
-                                0.0, 0.0, 0.0, 0.0, 0.0, INFO_QUOTE);
+                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, INFO_QUOTE);
+
   GtkWidget* labelInfo = gtk_label_new(info);
   gtk_widget_set_halign(labelInfo, GTK_ALIGN_START);
 
