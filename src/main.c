@@ -15,7 +15,7 @@
 
 #define INFO_PATTERN                                                           \
   "\nCapital: $%.2f\nPosition: %.2f%%\nPrice: $%.2f\nShare: %d\nTotal: %.2f\n" \
-  "\nStop:\n3%%: $%.2f\n5%%: "                                                 \
+  "\nStop:\n3%%: $%.2f\n4%%: $%.2f\n5%%: "                                     \
   "$%.2f\n7%%: "                                                               \
   "$%.2f\n\nProfit:\n10%%: $%.2f\n15%%: $%.2f\n20%%: $%.2f\n25%%: "            \
   "$%.2f\n30%%: "                                                              \
@@ -24,6 +24,35 @@
 #define INFO_QUOTE "Succeed!  No Matter What!  Whatever It Takes!"
 
 #define INFO_ERROR "I should study harder to solve to question!"
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static gchar* printInfo(float capital,
+                        float position,
+                        float price,
+                        int share,
+                        float total,
+                        float sThree,
+                        float sFour,
+                        float sFive,
+                        float sSeven,
+                        float pTen,
+                        float pFifteen,
+                        float pTwenty,
+                        float pTwentyFive,
+                        float pThirty,
+                        gchar* quote) {
+  return g_strdup_printf(INFO_PATTERN, capital, position, price, share, total,
+                         sThree, sFour, sFive, sSeven, pTen, pFifteen, pTwenty,
+                         pTwentyFive, pThirty, quote);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static gchar* emptyInfo(gchar* quote) {
+  return g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0,
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, quote);
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,6 +115,7 @@ static void buttonClicked(GtkButton* button, void* data) {
   float total = price * share;
 
   float three = price * (1.0 - 0.03);
+  float four = price * (1.0 - 0.04);
   float five = price * (1.0 - 0.05);
   float seven = price * (1.0 - 0.07);
 
@@ -95,9 +125,8 @@ static void buttonClicked(GtkButton* button, void* data) {
   float twentyfive = price * (1.0 + 0.25);
   float thirty = price * (1.0 + 0.3);
 
-  info = g_strdup_printf(INFO_PATTERN, capital, position, price, share, total,
-                         three, five, seven, ten, fifteen, twenty, twentyfive,
-                         thirty, INFO_QUOTE);
+  info = printInfo(capital, position, price, share, total, three, four, five,
+                   seven, ten, fifteen, twenty, twentyfive, thirty, INFO_QUOTE);
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
@@ -105,8 +134,7 @@ static void buttonClicked(GtkButton* button, void* data) {
 
 error:
 
-  info = g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0,
-                         0.0, 0.0, 0.0, 0.0, 0.0, INFO_ERROR);
+  info = emptyInfo(INFO_ERROR);
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
@@ -152,8 +180,7 @@ static void activate() {
 
   GtkWidget* buttonCalculate = gtk_button_new_with_label("Calculate");
 
-  gchar* info = g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0,
-                                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, INFO_QUOTE);
+  gchar* info = emptyInfo(INFO_QUOTE);
 
   GtkWidget* labelInfo = gtk_label_new(info);
   gtk_widget_set_halign(labelInfo, GTK_ALIGN_START);
