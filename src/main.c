@@ -16,8 +16,9 @@
 #define INFO_PATTERN                                                           \
   "\nCapital: $%.2f\nPosition: %.2f%%\nPrice: $%.2f\nShare: %d\nTotal: %.2f\n" \
   "\nStop:\n3%%: $%.2f\n4%%: $%.2f\n5%%: "                                     \
-  "$%.2f\n7%%: "                                                               \
-  "$%.2f\n\nProfit:\n10%%: $%.2f\n15%%: $%.2f\n20%%: $%.2f\n25%%: "            \
+  "$%.2f\n6%%: $%.2f\n7%%: "                                                   \
+  "$%.2f\n8%%: $%.2f\n\nProfit:\n10%%: $%.2f\n15%%: $%.2f\n20%%: "             \
+  "$%.2f\n25%%: "                                                              \
   "$%.2f\n30%%: "                                                              \
   "$%.2f\n\n%s\n"
 
@@ -35,7 +36,9 @@ static gchar* printInfo(float capital,
                         float sThree,
                         float sFour,
                         float sFive,
+                        float sSix,
                         float sSeven,
+                        float sEight,
                         float pTen,
                         float pFifteen,
                         float pTwenty,
@@ -43,15 +46,15 @@ static gchar* printInfo(float capital,
                         float pThirty,
                         gchar* quote) {
   return g_strdup_printf(INFO_PATTERN, capital, position, price, share, total,
-                         sThree, sFour, sFive, sSeven, pTen, pFifteen, pTwenty,
-                         pTwentyFive, pThirty, quote);
+                         sThree, sFour, sFive, sSix, sSeven, sEight, pTen,
+                         pFifteen, pTwenty, pTwentyFive, pThirty, quote);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static gchar* emptyInfo(gchar* quote) {
   return g_strdup_printf(INFO_PATTERN, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0,
-                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, quote);
+                         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, quote);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +120,9 @@ static void buttonClicked(GtkButton* button, void* data) {
   float three = price * (1.0 - 0.03);
   float four = price * (1.0 - 0.04);
   float five = price * (1.0 - 0.05);
+  float six = price * (1.0 - 0.06);
   float seven = price * (1.0 - 0.07);
+  float eight = price * (1.0 - 0.08);
 
   float ten = price * (1.0 + 0.1);
   float fifteen = price * (1.0 + 0.15);
@@ -126,7 +131,8 @@ static void buttonClicked(GtkButton* button, void* data) {
   float thirty = price * (1.0 + 0.3);
 
   info = printInfo(capital, position, price, share, total, three, four, five,
-                   seven, ten, fifteen, twenty, twentyfive, thirty, INFO_QUOTE);
+                   six, seven, eight, ten, fifteen, twenty, twentyfive, thirty,
+                   INFO_QUOTE);
 
   gtk_label_set_text(GTK_LABEL(userData->labelInfo), info);
 
